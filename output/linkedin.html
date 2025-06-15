@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Links - Social Media Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .back-button {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .links-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .link-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .link-card:hover {
+            transform: translateY(-2px);
+        }
+        .link-card a {
+            color: #0077b5;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="index.html" class="back-button">← Back to Menu</a>
+        <h1>LinkedIn Links</h1>
+    </div>
+    <div class="links-container" id="linksContainer">
+    </div>
+
+    <script>
+        async function loadLinks() {
+            try {
+                const response = await fetch('linkedin_links.txt');
+                const text = await response.text();
+                const links = text.split('\n').filter(link => link.trim());
+                
+                const container = document.getElementById('linksContainer');
+                
+                links.forEach(link => {
+                    const card = document.createElement('div');
+                    card.className = 'link-card';
+                    
+                    card.innerHTML = `
+                        <a href="${link}" target="_blank">${link}</a>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading links:', error);
+            }
+        }
+
+        loadLinks();
+    </script>
+</body>
+</html>

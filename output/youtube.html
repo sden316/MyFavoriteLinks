@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Links - Social Media Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .back-button {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .video-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        .video-card a {
+            text-decoration: none;
+            color: #333;
+        }
+        .thumbnail {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .video-info {
+            padding: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="index.html" class="back-button">← Back to Menu</a>
+        <h1>YouTube Links</h1>
+    </div>
+    <div class="gallery" id="videoGallery">
+    </div>
+
+    <script>
+        async function loadVideos() {
+            try {
+                const response = await fetch('youtube_links.txt');
+                const text = await response.text();
+                const links = text.split('\n').filter(link => link.trim());
+                
+                const gallery = document.getElementById('videoGallery');
+                
+                links.forEach(link => {
+                    let videoId = '';
+                    if (link.includes('youtu.be/')) {
+                        videoId = link.split('youtu.be/')[1].split('?')[0];
+                    } else if (link.includes('youtube.com/')) {
+                        videoId = link.split('shorts/')[1]?.split('?')[0] ||
+                                 link.split('v=')[1]?.split('&')[0];
+                    }
+                    
+                    if (videoId) {
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
+                        
+                        card.innerHTML = `
+                            <a href="${link}" target="_blank">
+                                <img class="thumbnail" 
+                                     src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" 
+                                     alt="Video thumbnail">
+                                <div class="video-info">
+                                    <p>Watch on YouTube</p>
+                                </div>
+                            </a>
+                        `;
+                        
+                        gallery.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
+
+        loadVideos();
+    </script>
+</body>
+</html>
